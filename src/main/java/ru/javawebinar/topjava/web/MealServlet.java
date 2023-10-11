@@ -10,14 +10,15 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 import static org.slf4j.LoggerFactory.getLogger;
-    public class MealServlet extends HttpServlet {
-        private static final Logger log = getLogger(ru.javawebinar.topjava.web.MealServlet.class);
 
-        @Override
-        protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-            log.debug("redirect to meals");
+public class MealServlet extends HttpServlet {
+    private static final Logger log = getLogger(MealServlet.class);
 
-            request.setAttribute("meals", MealsUtil.getWithExcess(MealsUtil.MEALS, MealsUtil.CALORIES_PER_DAY));
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        log.debug("redirect to meals");
+
+            request.setAttribute("meals", MealsUtil.getWithExcess(MealsUtil.mealList, MealsUtil.CALORIES_PER_DAY));
             request.getRequestDispatcher("/meals.jsp").forward(request, response);
         }
     }
