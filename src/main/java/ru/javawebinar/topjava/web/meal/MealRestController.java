@@ -12,16 +12,15 @@ import ru.javawebinar.topjava.web.SecurityUtil;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Collection;
 import java.util.List;
 
+import static ru.javawebinar.topjava.util.ValidationUtil.assureIdConsistent;
 import static ru.javawebinar.topjava.util.ValidationUtil.checkNew;
 
 @Controller
-public abstract class MealRestController {
-    protected final Logger log = LoggerFactory.getLogger(MealRestController.class);
+public class MealRestController {
+    private final Logger log = LoggerFactory.getLogger(MealRestController.class);
     private final MealService service;
-
     @Autowired
     public MealRestController(MealService service) {
         this.service = service;
@@ -39,10 +38,10 @@ public abstract class MealRestController {
         service.delete(id, userId);
     }
 
-    public Collection<Meal> getAll() {
+    public List<MealTo> getAll() {
         int userId = SecurityUtil.authUserId();
         log.info("getAll for user {}", userId);
-        return service.getAll(userId);
+        return MealsUtil.getTos(service.getAll(userId), SecurityUtil.authUserCaloriesPerDay());
     }
 
     public Meal create(Meal meal) {
@@ -52,17 +51,20 @@ public abstract class MealRestController {
         return service.create(meal, userId);
     }
 
-    public void update(Meal meal) {
+    public void update(Meal meal, int id) {
         int userId = SecurityUtil.authUserId();
+        assureIdConsistent(meal, id);
         log.info("update {} for user {}", meal, userId);
         service.update(meal, userId);
     }
 
-    public List<MealTo> getBetweenPeriod(LocalDate startDate, LocalTime startTime, LocalDate endDate, LocalTime endTime) {
+    public List<MealTo> getBetweenHalfOpen(LocalDate startDate, LocalTime startTime, LocalDate endDate, LocalTime endTime) {
         int userId = SecurityUtil.authUserId();
         log.info("getBetweenPeriod dates {} - {} time {} - {} user {}", startDate, endDate, startTime, endTime, userId);
+
+        List<Meal> mealsDatesFiltered = service.getBetweenHalfOpen(startDate, endDate, userId);
         return MealsUtil.getFilteredTos(
-                service.intervalBetweenDates(startDate, endDate, userId), SecurityUtil.authUserCaloriesPerDay(), startTime, endTime);
+                mealsDatesFiltered, SecurityUtil.authUserCaloriesPerDay(), startTime, endTime);
 
     }
 }

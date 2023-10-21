@@ -12,7 +12,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.Month;
 import java.util.Arrays;
-import java.util.Collection;
+import java.util.List;
 
 public class SpringMain {
     public static void main(String[] args) {
@@ -23,11 +23,13 @@ public class SpringMain {
             System.out.println(adminUserController.create(new User(null, "userName", "email@mail.ru", "password", Role.ADMIN)));
             System.out.println();
             MealRestController mealController = appCtx.getBean(MealRestController.class);
-            Collection<MealTo> filteredMealsTo =
-                    mealController.getBetweenPeriod(
+            List<MealTo> filteredMealsTo =
+                    mealController.getBetweenHalfOpen(
                             LocalDate.of(2020, Month.JANUARY, 30), LocalTime.of(8, 0),
                             LocalDate.of(2020, Month.JANUARY, 31), LocalTime.of(21, 0));
             filteredMealsTo.forEach(System.out::println);
+            System.out.println();
+            System.out.println(mealController.getBetweenHalfOpen(null, null, null, null));
         }
     }
 }
