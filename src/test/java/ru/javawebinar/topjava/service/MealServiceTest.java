@@ -26,15 +26,7 @@ import static ru.javawebinar.topjava.MealTestData.*;
 import static ru.javawebinar.topjava.UserTestData.ADMIN_ID;
 import static ru.javawebinar.topjava.UserTestData.USER_ID;
 
-@ContextConfiguration({
-        "classpath:spring/spring-app.xml",
-        "classpath:spring/spring-db.xml"
-})
-@RunWith(SpringRunner.class)
-@Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
-@ActiveProfiles(resolver = ActiveDbProfileResolver.class)
-@Ignore
-public class MealServiceTest {
+public abstract class MealServiceTest extends AbstractServiceTest {
     private static final Logger log = getLogger("result");
 
     private static final StringBuilder results = new StringBuilder();
@@ -52,15 +44,6 @@ public class MealServiceTest {
 
     @Autowired
     private MealService service;
-
-    @AfterClass
-    public static void printResult() {
-        log.info("\n---------------------------------" +
-                "\nTest                 Duration, ms" +
-                "\n---------------------------------" +
-                results +
-                "\n---------------------------------");
-    }
 
     @Test
     public void delete() {
