@@ -40,7 +40,7 @@ public class AdminUIController extends AbstractUserController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<String> createOrUpdate(@Valid UserTo userTo, BindingResult result) {
         if (result.hasErrors()) {
-            return ValidationUtil.getErrorsMessage(result);
+            return ValidationUtil.getErrorsResponse(result);
         }
         if (userTo.isNew()) {
             super.create(userTo);
@@ -50,10 +50,10 @@ public class AdminUIController extends AbstractUserController {
         return ResponseEntity.ok().build();
     }
 
-        @Override
-        @PostMapping("/{id}")
-        @ResponseStatus(HttpStatus.NO_CONTENT)
-        public void enable ( @PathVariable int id, @RequestParam boolean enabled){
-            super.enable(id, enabled);
-        }
+    @Override
+    @PostMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void enable(@PathVariable int id, @RequestParam boolean enabled) {
+        super.enable(id, enabled);
     }
+}

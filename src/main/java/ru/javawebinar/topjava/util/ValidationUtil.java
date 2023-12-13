@@ -77,7 +77,7 @@ public class ValidationUtil {
     }
 
 
-    public static ResponseEntity<String> getErrorsMessage(BindingResult result) {
+    public static ResponseEntity<String> getErrorsResponse(BindingResult result) {
         String errorFieldsMsg = result.getFieldErrors().stream()
                     .map(fe -> String.format("[%s] %s", fe.getField(), fe.getDefaultMessage()))
                     .collect(Collectors.joining("<br>"));
