@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import ru.javawebinar.topjava.UserTestData;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.service.UserService;
 import ru.javawebinar.topjava.to.UserTo;
@@ -148,21 +147,22 @@ class AdminRestControllerTest extends AbstractControllerTest {
 
     @Test
     void createNotValid() throws Exception {
-        UserTo newUser = new UserTo(null, "YYY", null, null, 5);
+        User newUser = new User(null, "YYY", null, null, 5);
         perform(MockMvcRequestBuilders.post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
+                .with(userHttpBasic(admin))
                 .content(JsonUtil.writeValue(newUser)))
-                .andExpect(status().isUnprocessableEntity())
-                .andDo(print());
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity());
     }
 
     @Test
     void updateNotValid() throws Exception {
-        UserTo updatedTo = new UserTo(null, null, "oOooOOo", null, 5);
-        perform(MockMvcRequestBuilders.put(REST_URL)
+        User updatedUser = new User(null, null, "oOooOOo", null, 5);
+        perform(MockMvcRequestBuilders.put(REST_URL + USER_ID)
                 .contentType(MediaType.APPLICATION_JSON)
-                .with(userHttpBasic(user))
-                .content(JsonUtil.writeValue(updatedTo)))
+                .with(userHttpBasic(admin))
+                .content(JsonUtil.writeValue(updatedUser)))
                 .andDo(print())
                 .andExpect(status().isUnprocessableEntity());
     }
